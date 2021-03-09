@@ -3,6 +3,8 @@
 import validate from './utils';
 
 class NumberSchema {
+  type = 'number';
+
   shema = {
     required: null,
     positive: null,
@@ -16,7 +18,7 @@ class NumberSchema {
   }
 
   required = () => {
-    this.shema.required = (num) => typeof num === 'number';
+    this.shema.required = (num) => typeof num === this.type; // eslint-disable-line
   }
 
   positive = () => {
@@ -25,7 +27,7 @@ class NumberSchema {
   }
 
   range = (start, end) => {
-    this.shema.range = (num) => num > start && num < end;
+    this.shema.range = (num) => num >= start && num <= end;
   }
 }
 

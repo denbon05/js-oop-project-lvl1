@@ -3,6 +3,8 @@
 import validate from './utils';
 
 class StringSchema {
+  type = 'string';
+
   shema = {
     required: null,
     content: null,
@@ -10,13 +12,14 @@ class StringSchema {
   }
 
   isValid = (arg) => {
-    if (typeof arg !== 'string') return false;
+    if (typeof arg !== this.type) return false; // eslint-disable-line
     const errors = validate(this.shema, arg);
     return errors.length === 0;
   }
 
   required = () => {
     this.shema.required = (arg) => arg.length > 0;
+    return this;
   }
 
   contains = (substr) => {

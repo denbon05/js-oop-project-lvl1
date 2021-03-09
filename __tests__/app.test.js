@@ -8,6 +8,7 @@ describe('Check validator', () => {
     const v = new Validator();
     const schema = v.string();
 
+    expect(schema.type).toBe('string');
     expect(schema.isValid('')).toBeTruthy();
 
     schema.required();
@@ -26,6 +27,7 @@ describe('Check validator', () => {
 
     const schema = v.number();
 
+    expect(schema.type).toBe('number');
     expect(schema.isValid(null)).toBeTruthy();
 
     schema.required();
@@ -35,8 +37,43 @@ describe('Check validator', () => {
 
     schema.range(-5, 5);
 
-    expect(schema.isValid(-3)).toBeTruthy();
-    expect(schema.isValid(5)).toBeFalsy();
+    expect(schema.isValid(-6)).toBeFalsy();
+    expect(schema.isValid(5)).toBeTruthy();
     expect(schema.positive().isValid(4)).toBeTruthy();
+  });
+
+  test('validate array', () => {
+    const v = new Validator();
+
+    const schema = v.array();
+
+    expect(schema.isValid(null)).toBeFalsy();
+
+    schema.required();
+
+    expect(schema.isValid([])).toBeTruthy();
+    expect(schema.isValid(['hexlet'])).toBeTruthy();
+
+    schema.sizeof(2);
+
+    expect(schema.isValid(['hexlet'])).toBeFalsy();
+    expect(schema.isValid(['hexlet', 'code-basics'])).toBeTruthy();
+  });
+
+  test('validate shape', () => {
+    const v = new Validator();
+
+    const schema = v.object();
+
+    // Позволяет описывать валидацию для свойств объекта
+    schema.shape({
+      name: v.string().required(),
+      age: v.number().positive(),
+    });
+
+    expect(schema.isValid({ name: 'kolya', age: 100 })).toBeTruthy();
+    expect(schema.isValid({ name: 'maya', age: null })).toBeTruthy();
+    expect(schema.isValid({ name: '', age: null })).toBeFalsy();
+    expect(schema.isValid({ name: 'ada', age: -5 })).toBeFalsy();
   });
 });
