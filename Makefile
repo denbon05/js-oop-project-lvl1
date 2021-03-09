@@ -6,7 +6,7 @@ install-deps:
 test:
 	npm test
 
-test-coverage:
+cover:
 	npm test -- --coverage --coverageProvider=v8
 
 lint:
